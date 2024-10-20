@@ -307,6 +307,7 @@
         "LAUNDRY_DRYER_CONTROLS_CLUSTER": ["laundry-dryer-controls-server"],
         "WIFI_NETWORK_DIAGNOSTICS_CLUSTER": ["wifi-network-diagnostics-server"],
         "WINDOW_COVERING_CLUSTER": ["window-covering-server"],
-        "ZLL_COMMISSIONING_CLUSTER": []
+        "ZLL_COMMISSIONING_CLUSTER": [],
+        "APPLE_DEVICE_INFORMATION_CLUSTER": ["apple-device-information-server"]
     }
 }

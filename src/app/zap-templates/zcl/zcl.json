@@ -6,7 +6,8 @@
         ".",
         "./data-model/chip/",
         "./data-model/draft/",
-        "./data-model/silabs/"
+        "./data-model/silabs/",
+        "./data-model/apple/"
     ],
     "_comment": "Ensure access-control-definitions.xml is first in xmlFile array",
     "xmlFile": [
@@ -127,7 +128,8 @@
         "sample-mei-cluster.xml",
         "types/door-lock.xml",
         "types/occupancy-sensing.xml",
-        "types/thermostat-user-interface-configuration.xml"
+        "types/thermostat-user-interface-configuration.xml",
+        "apple-device-information-cluster.xml"
     ],
     "manufacturersXml": "../../../../src/app/zap-templates/zcl/data-model/manufacturers.xml",
     "options": {

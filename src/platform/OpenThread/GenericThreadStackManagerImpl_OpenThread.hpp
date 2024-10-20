@@ -285,6 +285,7 @@ CHIP_ERROR GenericThreadStackManagerImpl_OpenThread<ImplClass>::_SetThreadProvis
     VerifyOrReturnError(mOTInst, CHIP_ERROR_INCORRECT_STATE);
     otError otErr = OT_ERROR_FAILED;
     otOperationalDatasetTlvs tlvs;
+    otOperationalDataset dataset;
 
     assert(netInfo.size() <= Thread::kSizeOperationalDataset);
     tlvs.mLength = static_cast<uint8_t>(netInfo.size());
@@ -292,7 +293,28 @@ CHIP_ERROR GenericThreadStackManagerImpl_OpenThread<ImplClass>::_SetThreadProvis
 
     // Set the dataset as the active dataset for the node.
     Impl()->LockThreadStack();
-    otErr = otDatasetSetActiveTlvs(mOTInst, &tlvs);
+    //otErr = otDatasetSetActiveTlvs(mOTInst, &tlvs);
+
+    otErr = otDatasetParseTlvs(&tlvs, &dataset);
+    if (otErr != OT_ERROR_NONE)
+    {
+        return MapOpenThreadError(otErr);
+    }
+
+#if CHIP_DEVICE_CONFIG_THREAD_ECSL_SED
+    // Check if dataset contain Wakeup channel, if not set to 11 by default.
+    if (!dataset.mComponents.mIsWakeupChannelPresent)
+    {
+        dataset.mComponents.mIsWakeupChannelPresent = true;
+        dataset.mWakeupChannel = 11;
+        ChipLogProgress(DeviceLayer, "OpenThread: No wakeup channel received, configured wakeup channel %d.", dataset.mWakeupChannel);
+    }
+    else
+    {
+        ChipLogProgress(DeviceLayer, "OpenThread: Configured received wakeup channel %d.", dataset.mWakeupChannel);
+    }
+#endif
+    otErr = otDatasetSetActive(mOTInst, &dataset);
     Impl()->UnlockThreadStack();
     if (otErr != OT_ERROR_NONE)
     {
@@ -363,8 +385,21 @@ CHIP_ERROR GenericThreadStackManagerImpl_OpenThread<ImplClass>::_AttachToThreadN
 
     if (dataset.IsCommissioned())
     {
+ #if CHIP_DEVICE_CONFIG_THREAD_ECSL_SED
+        otError otErr = otLinkWorEnable(mOTInst, true);
+
+        if (otErr == OT_ERROR_NONE)
+        {
+#if OPENTHREAD_CONFIG_LOG_LEVEL_DYNAMIC_ENABLE
+            // Use lower log level so as to not affect schedule rx and tx timings.
+            otErr = otLoggingSetLevel(OT_LOG_LEVEL_WARN);
+            //VerifyOrExit(otErr == OT_ERROR_NONE, err = MapOpenThreadError(otErr));
+#endif // OPENTHREAD_CONFIG_LOG_LEVEL_DYNAMIC_ENABLE
+        }
+#else
         ReturnErrorOnFailure(Impl()->SetThreadEnabled(true));
         mpConnectCallback = callback;
+#endif
     }
 
     return CHIP_NO_ERROR;
@@ -1107,8 +1142,13 @@ CHIP_ERROR GenericThreadStackManagerImpl_OpenThread<ImplClass>::DoInit(otInstanc
         otErr = otIp6SetEnabled(otInst, true);
         VerifyOrExit(otErr == OT_ERROR_NONE, err = MapOpenThreadError(otErr));
 
+#if CHIP_DEVICE_CONFIG_THREAD_ECSL_SED
+        otErr = otLinkWorEnable(mOTInst, true);
+        VerifyOrExit(otErr == OT_ERROR_NONE, err = MapOpenThreadError(otErr));
+#else
         otErr = otThreadSetEnabled(otInst, true);
         VerifyOrExit(otErr == OT_ERROR_NONE, err = MapOpenThreadError(otErr));
+#endif
 
         ChipLogProgress(DeviceLayer, "OpenThread ifconfig up and thread start");
     }

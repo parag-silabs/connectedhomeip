@@ -396,10 +396,9 @@ CHIP_ERROR GenericThreadStackManagerImpl_OpenThread<ImplClass>::_AttachToThreadN
             //VerifyOrExit(otErr == OT_ERROR_NONE, err = MapOpenThreadError(otErr));
 #endif // OPENTHREAD_CONFIG_LOG_LEVEL_DYNAMIC_ENABLE
         }
-#else
+#endif
         ReturnErrorOnFailure(Impl()->SetThreadEnabled(true));
         mpConnectCallback = callback;
-#endif
     }
 
     return CHIP_NO_ERROR;
@@ -1165,10 +1164,9 @@ CHIP_ERROR GenericThreadStackManagerImpl_OpenThread<ImplClass>::DoInit(otInstanc
         {
             err = MapOpenThreadError(otErr);
         }
-#else
+#endif
         otErr = otThreadSetEnabled(otInst, true);
         VerifyOrExit(otErr == OT_ERROR_NONE, err = MapOpenThreadError(otErr));
-#endif
 
         ChipLogProgress(DeviceLayer, "OpenThread ifconfig up and thread start");
     }

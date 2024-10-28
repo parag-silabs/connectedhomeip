@@ -160,6 +160,7 @@ void SilabsLCD::WriteStatus()
 {
     uint8_t lineNb = 0;
     char str[20];
+    char eCslStr[9];
 
     GLIB_clear(&glibContext);
     sprintf(str, "# Fabrics : %d", mStatus.nbFabric);
@@ -190,6 +191,11 @@ void SilabsLCD::WriteStatus()
     GLIB_drawStringOnLine(&glibContext, "", lineNb++, GLIB_ALIGN_LEFT, 0, 0, true);
     sprintf(str, "Connected : %c", mStatus.connected ? 'Y' : 'N');
     GLIB_drawStringOnLine(&glibContext, str, lineNb++, GLIB_ALIGN_LEFT, 0, 0, true);
+#if CHIP_DEVICE_CONFIG_THREAD_ECSL_SED
+    eCSLStatusEnumToString(mStatus.eCslStatus, eCslStr);
+    sprintf(str, "eCsl : %s", eCslStr);
+    GLIB_drawStringOnLine(&glibContext, str, lineNb++, GLIB_ALIGN_LEFT, 0, 0, true);
+#endif
     sprintf(str, "Advertising : %c", mStatus.advertising ? 'Y' : 'N');
     GLIB_drawStringOnLine(&glibContext, str, lineNb++, GLIB_ALIGN_LEFT, 0, 0, true);
     if (mStatus.icdMode != NotICD)
@@ -253,6 +259,30 @@ void SilabsLCD::SetStatus(DisplayStatus_t & status)
 {
     mStatus = status;
 }
+
+#if CHIP_DEVICE_CONFIG_THREAD_ECSL_SED
+void SilabsLCD::eCSLStatusEnumToString(ECslStatus_e status, char *str)
+{
+    switch (status)
+    {
+        case Disabled:
+            memcpy(str, "Disabled", 9);
+            break;
+
+        case Enabled:
+            memcpy(str, "Enabled", 8);
+            break;
+
+        case Linking:
+            memcpy(str, "Linking", 8);
+            break;
+
+        case Linked:
+            memcpy(str, "Linked", 7);
+            break;
+    }
+}
+#endif
 
 #ifdef QR_CODE_ENABLED
 void SilabsLCD::WriteQRCode()

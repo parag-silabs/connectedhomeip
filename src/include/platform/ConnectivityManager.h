@@ -194,6 +194,11 @@ public:
     // Thread Methods
     ThreadMode GetThreadMode();
     CHIP_ERROR SetThreadMode(ThreadMode val);
+#if CHIP_DEVICE_CONFIG_THREAD_ECSL_SED
+    bool IsEnhCslPeerLinked();
+    bool IsEnhCslPeerLinking();
+    bool IsWorEnabled();
+#endif
     bool IsThreadEnabled();
     bool IsThreadApplicationControlled();
     ThreadDeviceType GetThreadDeviceType();
@@ -426,6 +431,23 @@ inline CHIP_ERROR ConnectivityManager::SetThreadMode(ThreadMode val)
 {
     return static_cast<ImplClass *>(this)->_SetThreadMode(val);
 }
+
+#if CHIP_DEVICE_CONFIG_THREAD_ECSL_SED
+inline bool ConnectivityManager::IsEnhCslPeerLinked(void)
+{
+    return static_cast<ImplClass *>(this)->_IsEnhCslPeerLinked();
+}
+
+inline bool ConnectivityManager::IsEnhCslPeerLinking(void)
+{
+    return static_cast<ImplClass *>(this)->_IsEnhCslPeerLinking();
+}
+
+inline bool ConnectivityManager::IsWorEnabled(void)
+{
+    return static_cast<ImplClass *>(this)->_IsWorEnabled();
+}
+#endif
 
 inline bool ConnectivityManager::IsThreadEnabled()
 {

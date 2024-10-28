@@ -82,6 +82,11 @@ protected:
     void _ProcessThreadActivity(void);
     bool _HaveRouteToAddress(const Inet::IPAddress & destAddr);
     void _OnPlatformEvent(const ChipDeviceEvent * event);
+#if CHIP_DEVICE_CONFIG_THREAD_ECSL_SED
+    bool _IsEnhCslPeerLinked(void);
+    bool _IsEnhCslPeerLinking(void);
+    bool _IsWorEnabled(void);
+#endif
     bool _IsThreadEnabled(void);
     CHIP_ERROR _SetThreadEnabled(bool val);
 

@@ -43,6 +43,16 @@ public:
         InvalidScreen,
     } Screen_e;
 
+#if CHIP_DEVICE_CONFIG_THREAD_ECSL_SED
+    typedef enum  eCslStatus
+    {
+        Disabled = 0,
+        Enabled,
+        Linking,
+        Linked,
+    }ECslStatus_e;
+#endif
+
     typedef enum icdMode
     {
         NotICD = 0,
@@ -52,11 +62,14 @@ public:
 
     typedef struct dStatus
     {
-        uint8_t nbFabric     = 0;
-        bool connected       = false;
-        char networkName[50] = { "TODO" };
-        bool advertising     = false;
-        ICDMode_e icdMode    = NotICD;
+        uint8_t nbFabric        = 0;
+        bool connected          = false;
+        char networkName[50]    = { "TODO" };
+        bool advertising        = false;
+        ICDMode_e icdMode       = NotICD;
+#if CHIP_DEVICE_CONFIG_THREAD_ECSL_SED
+        ECslStatus_e eCslStatus = Disabled;
+#endif
     } DisplayStatus_t;
 
     typedef void (*customUICB)(GLIB_Context_t * context);
@@ -86,6 +99,10 @@ private:
     } DemoState_t;
 
     void WriteDemoUI();
+
+#if CHIP_DEVICE_CONFIG_THREAD_ECSL_SED
+void eCSLStatusEnumToString(ECslStatus_e status, char *str);
+#endif
 
 #ifdef QR_CODE_ENABLED
     void WriteQRCode();

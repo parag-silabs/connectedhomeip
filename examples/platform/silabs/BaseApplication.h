@@ -131,6 +131,13 @@ public:
     static SilabsLCD & GetLCD(void);
 
     static void UpdateLCDStatusScreen(void);
+
+#if CHIP_DEVICE_CONFIG_THREAD_ECSL_SED
+    /**
+     * @brief Return status of the enhanced CSL link.
+     */
+    static uint8_t GeteCSLStatus(void);
+#endif
 #endif
 
     /**
@@ -244,7 +251,6 @@ protected:
      * @param refreshLCD When true, The LCD of the device will be refreshed to show the QR code
      */
     static void OutputQrCode(bool refreshLCD);
-
     /**********************************************************
      * Protected Attributes declaration
      *********************************************************/

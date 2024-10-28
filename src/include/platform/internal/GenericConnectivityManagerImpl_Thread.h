@@ -60,6 +60,11 @@ protected:
     void _OnPlatformEvent(const ChipDeviceEvent * event);
     ConnectivityManager::ThreadMode _GetThreadMode();
     CHIP_ERROR _SetThreadMode(ConnectivityManager::ThreadMode val);
+#if CHIP_DEVICE_CONFIG_THREAD_ECSL_SED
+    bool _IsEnhCslPeerLinked(void);
+    bool _IsEnhCslPeerLinking(void);
+    bool _IsWorEnabled(void);
+#endif
     bool _IsThreadEnabled();
     bool _IsThreadApplicationControlled();
     ConnectivityManager::ThreadDeviceType _GetThreadDeviceType();
@@ -95,6 +100,26 @@ inline void GenericConnectivityManagerImpl_Thread<ImplClass>::_Init()
 {
     mFlags.ClearAll();
 }
+
+#if CHIP_DEVICE_CONFIG_THREAD_ECSL_SED
+template <class ImplClass>
+inline bool GenericConnectivityManagerImpl_Thread<ImplClass>::_IsEnhCslPeerLinked()
+{
+    return ThreadStackMgrImpl().IsEnhCslPeerLinked();
+}
+
+template <class ImplClass>
+inline bool GenericConnectivityManagerImpl_Thread<ImplClass>::_IsEnhCslPeerLinking()
+{
+    return ThreadStackMgrImpl().IsEnhCslPeerLinking();
+}
+
+template <class ImplClass>
+inline bool GenericConnectivityManagerImpl_Thread<ImplClass>::_IsWorEnabled()
+{
+    return ThreadStackMgrImpl().IsWorEnabled();
+}
+#endif
 
 template <class ImplClass>
 inline bool GenericConnectivityManagerImpl_Thread<ImplClass>::_IsThreadEnabled()

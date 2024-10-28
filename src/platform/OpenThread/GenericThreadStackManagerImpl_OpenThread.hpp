@@ -231,6 +231,47 @@ void GenericThreadStackManagerImpl_OpenThread<ImplClass>::_OnPlatformEvent(const
     }
 }
 
+#if CHIP_DEVICE_CONFIG_THREAD_ECSL_SED
+template <class ImplClass>
+bool GenericThreadStackManagerImpl_OpenThread<ImplClass>::_IsEnhCslPeerLinked(void)
+{
+    VerifyOrReturnValue(mOTInst, false);
+    bool isLinked;
+
+    Impl()->LockThreadStack();
+    isLinked = otThreadIsEnhCslPeerLinked(mOTInst);
+    Impl()->UnlockThreadStack();
+
+    return isLinked;
+}
+
+template <class ImplClass>
+bool GenericThreadStackManagerImpl_OpenThread<ImplClass>::_IsEnhCslPeerLinking(void)
+{
+    VerifyOrReturnValue(mOTInst, false);
+    bool isLinking;
+
+    Impl()->LockThreadStack();
+    isLinking = otThreadIsEnhCslPeerLinking(mOTInst);
+    Impl()->UnlockThreadStack();
+
+    return isLinking;
+}
+
+template <class ImplClass>
+bool GenericThreadStackManagerImpl_OpenThread<ImplClass>::_IsWorEnabled(void)
+{
+    VerifyOrReturnValue(mOTInst, false);
+    bool isWorEnabled;
+
+    Impl()->LockThreadStack();
+    isWorEnabled = otLinkIsWorEnabled(mOTInst);
+    Impl()->UnlockThreadStack();
+
+    return isWorEnabled;
+}
+#endif
+
 template <class ImplClass>
 bool GenericThreadStackManagerImpl_OpenThread<ImplClass>::_IsThreadEnabled(void)
 {

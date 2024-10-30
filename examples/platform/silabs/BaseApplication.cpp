@@ -801,7 +801,7 @@ bool BaseApplication::GetProvisionStatus()
     return BaseApplication::sIsProvisioned;
 }
 
-#if CHIP_DEVICE_CONFIG_THREAD_ECSL_SED
+#if CHIP_DEVICE_CONFIG_THREAD_ECSL_SED && DISPLAY_ENABLED
 uint8_t BaseApplication::GeteCSLStatus(void)
 {
     uint8_t status;

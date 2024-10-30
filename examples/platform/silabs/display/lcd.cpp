@@ -160,7 +160,9 @@ void SilabsLCD::WriteStatus()
 {
     uint8_t lineNb = 0;
     char str[20];
+#if CHIP_DEVICE_CONFIG_THREAD_ECSL_SED
     char eCslStr[9];
+#endif
 
     GLIB_clear(&glibContext);
     sprintf(str, "# Fabrics : %d", mStatus.nbFabric);
